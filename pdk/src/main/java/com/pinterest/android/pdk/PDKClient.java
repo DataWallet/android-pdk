@@ -262,6 +262,23 @@ public class PDKClient {
         putRequest(url, params, callback);
     }
 
+    public PinterestDialog.PinterestDialogListener mPinterestDialogListener = new PinterestDialog.PinterestDialogListener() {
+        @Override
+        public void onSuccess(String code) {
+            onOauthResponse(code);
+        }
+
+        @Override
+        public void onCancel() {
+
+        }
+
+        @Override
+        public void onError(String error) {
+
+        }
+    };
+
 
     //Authorized user Endpoints
 
@@ -437,8 +454,9 @@ public class PDKClient {
             paramList.add(new BasicNameValuePair("response_type", "token"));
 
             String url =  Utils.getUrlWithQueryParams(PROD_WEB_OAUTH_URL, paramList);
-            Intent oauthIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
-            c.startActivity(oauthIntent);
+            String redirct_url = "pdk" + _clientId + "://";
+            PinterestDialog mPintDialog = new PinterestDialog(c, url, redirct_url, mPinterestDialogListener);
+            mPintDialog.show();
 
         } catch (Exception e) {
             Utils.loge("PDK: Error initiating web oauth");
